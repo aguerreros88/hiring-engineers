@@ -1,0 +1,183 @@
+TEST DATA DOG
+Alcides Guerrero
+
+Contecnts:
+1. Setup the enviroment and Install Datadog Agent.
+2. Collect Metrics.
+3. Visualize Data.
+4. Monitor Data.
+5. Collect APM Data.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Setup the enviroment and Install Datadog Agent
+-First, i have installed Vagrant 2.2.19 and Virtual Box 6.1, in mi Windows 10 computer.
+
+-I have created a new folder to allocate all the files for the VM.
+-I have create the VM and initialize the VM, OS installed is Ubuntu 18.04.3 LTS
+
+
+
+After de creation the VM and Running i have created the trial Account in the Data Dog Web to install the  Agent: 
+I have install the Datadog agent: 
+
+DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=1b0f40da148e4695e057fc554eb99e74 DD_SITE="datadoghq.com" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
+
+
+
+
+
+2. Collect Metrics
+I have added tags to the configuration file datadog.yaml,  located in /etc/datadog.agent/.
+
+Once tags are added and the file is saved, you have to restart the agent amd them validate everithing it is working perfect.
+
+sudo systemctl restart datadog-agent
+sudo systemctl status datadog-agent
+
+
+After confirm everything is working good, i have check on Datadog platform:
+
+
+After installed the agent and creating the tags,  i proceed to install mysql and integrate with datadog platform.
+
+
+I have configured the automatically system startup for mysql:
+
+I have created a user and password in mysql: 
+
+I have prepare mysql server, giving privilegies to collect the metrics:
+
+after restarting the agent, the MySQL integration showed up in the UI
+
+
+I used the agent commands to view the MySQL check:
+
+Create a custom Agent check that submits a metric named my_metric with a random value between 0 and 1000.
+
+
+Here i run the command: sudo -u dd-agent -- datadog-agent check my_metric to verify my metric:
+
+
+
+Showing my metric in the sumary: 
+
+
+
+By default the custom check will run at 15 second intervals. Update the my_check.yaml file so that it runs at 45 second intervals:
+
+
+
+
+- Bonus Question Can you change the collection interval without modifying the Python check file you created?
+
+- Yes! You can update the collection interval in the my_metric.yaml file that i have created.
+
+3. Visualize Data.
+I have created a account in postman to validate the API Key, before the validation y have created an API Key and Application key:
+
+
+After create the app keys, i have validate the API Keys in postman:
+
+
+
+
+I have installed the Python3-pip libraries on my vm and the datadog-api-cliente, after installing i had some issues and i have upgrade  the datadog-api-client:
+
+
+
+After the instalation of the api client, i have create the example.py file in the vm:
+
+
+After installing the client and created the example.py file, I  have  run the commands: 
+
+
+i have confirmed it's created in the DatadogDashboard:
+
+
+
+after confirmed the api is working, i have modify the script in example.py
+The First widget takes the average of metric, the second widget uses the anomalies function and the third widget uses the rollup function.
+
+
+
+after modify the script, i execute the code via terminal to execute the script, after i see the newly created dashboard in the datadog platform:
+
+
+This is the Dashboard in the Datadog platform:
+
+
+This is the response we have in the past 5 minutes: 
+
+
+This is the snap:
+
+This is the capture of the email from the comment:
+
+
+What is the Anomaly graph displaying?
+
+The anomaly function is an algorithmic, shows as a grey band in the metric line, showing th expected behavior of a series based on the past. 
+
+
+
+
+Monitoring Data
+
+
+I havce created a new monitor from my metric: 
+1. Define the alert conditions.
+
+2. Create the notification that alert, warning or No data State: 
+
+ 
+
+View from DataDog platform:
+
+
+
+The three emails: 
+
+1. Warning
+
+
+2. Alert
+
+3. No Data
+
+Scheduling downtime for the notification after 7PM week days.
+
+
+Scheduling downtime for notification on Weekends whole day: 
+
+Both down times:
+
+
+
+
+
+Collecting APM Data
+
+
+I have install pip 
+After pip i have install ddtrace:
+
+
+then  install Flask
+
+I have created a basic app, app.py:
+
+
+
+i have add configuration to the datadog's  agent for the APM:
+
+
+
+After i have run the command of the configuration snippet
+DD_SERVICE="TEST_DATADOG_ALCIDES" DD_ENV="apm_test" DD_LOGS_INJECTION=true ddtrace-run python app.py
+
+
+
+What is the difference between a Service and a Resource?
+
+
+
